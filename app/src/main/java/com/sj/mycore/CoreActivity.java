@@ -22,7 +22,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class CoreActivity extends AppCompatActivity {
 
-    HashMap<String, Object> params;
+    private HashMap<String, Object> params;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
