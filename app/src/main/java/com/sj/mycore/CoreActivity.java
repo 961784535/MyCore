@@ -1,9 +1,10 @@
 package com.sj.mycore;
 
+import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sj.mycore.net.RestClient;
@@ -23,19 +24,19 @@ import io.reactivex.schedulers.Schedulers;
 public class CoreActivity extends AppCompatActivity {
 
     private HashMap<String, Object> params;
+    private android.widget.TextView tv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_core);
-
-
+        this.tv = (TextView) findViewById(R.id.tv);
     }
     public void click(View view){
- //             testGet();
+              testGet();
 //        testUpload();
 //        testDownload();
-        testRxGet();
+//        testRxGet();
     }
 
     /**
@@ -64,6 +65,7 @@ public class CoreActivity extends AppCompatActivity {
                     public void onNext(@NonNull String s) {
                         //响应结果
                         Toast.makeText(CoreActivity.this, s, Toast.LENGTH_SHORT).show();
+                        tv.setText("" + s);
                     }
 
                     @Override
