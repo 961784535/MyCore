@@ -5,9 +5,12 @@ import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sj.mycore.app.ConfigKeys;
+import com.sj.mycore.app.ProjectInit;
 import com.sj.mycore.net.RxPrinciple.RestClient;
 import com.sj.mycore.net.callback.IError;
 import com.sj.mycore.net.callback.IFailure;
@@ -25,31 +28,82 @@ import io.reactivex.schedulers.Schedulers;
 public class CoreActivity extends AppCompatActivity {
 
     private HashMap<String, Object> params;
-    private android.widget.TextView tv;
-    private String TAG ="CoreActivity";
+    private String TAG = "CoreActivity";
+    private android.widget.Button btnGet;
+    private android.widget.Button btnPost;
+    private android.widget.Button btnDownload;
+    private android.widget.Button btnUpLoad;
+    private TextView tvUrl;
+    private TextView tvResponse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_core);
-        this.tv = (TextView) findViewById(R.id.tv);
+        findView();
     }
-    public void click(View view){
-              testGet();
-//        testUpload();
-//        testDownload();
-//      testRxGet();
+
+    private void findView() {
+        this.tvResponse = (TextView) findViewById(R.id.tvResponse);
+        this.tvUrl = (TextView) findViewById(R.id.tvUrl);
+        this.btnUpLoad = (Button) findViewById(R.id.btnUpLoad);
+        this.btnDownload = (Button) findViewById(R.id.btnDownload);
+        this.btnPost = (Button) findViewById(R.id.btnPost);
+        this.btnGet = (Button) findViewById(R.id.btnGet);
+    }
+
+    public void click(View v){
+        switch (v.getId()) {
+            case R.id.btnGet : //
+//                testGet();
+                testRxGet();
+                break;
+            case R.id.btnPost : //
+
+                break;
+            case R.id.btnDownload : //
+                testDownload();
+//                testRxDownload();
+                break;
+            case R.id.btnUpLoad : //
+                testUpload();
+                break;
+            default:
+                break;
+        }
+    }
+
+    //get请求 (已测试OK)
+    private void testGet() {
+        params = new HashMap();
+        params.put("kw","%E7%99%BD");
+        params.put("site","qq.com");
+        params.put("apikey","IhNUGOTbEhh9qn41mEbwNxF5vUBpHg9a6XPuJeOGPn7Uqy9o8ecEGgezo4g5BSLi");
+        tvUrl.setText(""+ ProjectInit.getConfiguration(ConfigKeys.API_HOST).toString());
+        RestClient.create() //创建了 RestClientBuilder对象
+                .params(params)
+                .url("news/qihoo")
+                .success(new ISuccess() {
+                    @Override
+                    public void onSuccess(String responce) {
+                        Log.i(TAG, "onSuccess: ");
+                        Toast.makeText(CoreActivity.this, "Get成功", Toast.LENGTH_SHORT).show();
+                        tvResponse.setText("" + responce.toString());
+                    }
+                })
+                .build()  //创建了 RestClient对象
+                .get();  //get请求
     }
 
     /**
-     * 封装 rx
+     * 封装 rx  (已测试OK)
      */
     private void testRxGet() {
         params = new HashMap();
         params.put("kw","%E7%99%BD");
         params.put("site","qq.com");
         params.put("apikey","IhNUGOTbEhh9qn41mEbwNxF5vUBpHg9a6XPuJeOGPn7Uqy9o8ecEGgezo4g5BSLi");
-
+        tvUrl.setText(""+ ProjectInit.getConfiguration(ConfigKeys.API_HOST).toString());
         RxRestClient.create()
                 .url("news/qihoo")
                 .params(params)
@@ -66,13 +120,13 @@ public class CoreActivity extends AppCompatActivity {
                     @Override
                     public void onNext(@NonNull String s) {
                         //响应结果
-                        Toast.makeText(CoreActivity.this, s, Toast.LENGTH_SHORT).show();
-                        tv.setText("" + s);
+                        Toast.makeText(CoreActivity.this, "RxGet成功", Toast.LENGTH_SHORT).show();
+                        tvResponse.setText("" + s);
                     }
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-
+                        tvResponse.setText("" + e.getMessage());
                     }
 
                     @Override
@@ -103,33 +157,42 @@ public class CoreActivity extends AppCompatActivity {
                 })
                 .build()
                 .download();
-//        RxRestClient.create().params(params)
-//                .url("/examples/test.zip")
-//                .build()
-//                .download()
-//                .subscribeOn(Schedulers.io())//io线程处理
-//                .observeOn(AndroidSchedulers.mainThread())//主线程
-//                .subscribe(new Observer<Object>() {
-//                    @Override
-//                    public void onSubscribe(Disposable d) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onNext(Object o) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onComplete() {
-//                        Toast.makeText(CoreActivity.this, "下载成功", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
+    }
+
+    /**
+     * 文件下载 （下载地址有问题）
+     */
+    private void testRxDownload() {
+        //  测试下载  http://dengpaoedu.com:8080/examples/test.zip
+        params=new HashMap<>();
+        params.put("file","abcd.txt");
+        RxRestClient.create().params(params)
+                .url("/examples/test.zip")
+                .build()
+                .download()
+                .subscribeOn(Schedulers.io())//io线程处理
+                .observeOn(AndroidSchedulers.mainThread())//主线程
+                .subscribe(new Observer<Object>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(Object o) {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Toast.makeText(CoreActivity.this, "下载成功", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     //上传
@@ -158,26 +221,6 @@ public class CoreActivity extends AppCompatActivity {
                 })
                 .build()
                 .upload();
-    }
-
-    //get请求 (已测试OK)
-    private void testGet() {
-        params = new HashMap();
-        params.put("kw","%E7%99%BD");
-        params.put("site","qq.com");
-        params.put("apikey","IhNUGOTbEhh9qn41mEbwNxF5vUBpHg9a6XPuJeOGPn7Uqy9o8ecEGgezo4g5BSLi");
-        RestClient.create() //创建了 RestClientBuilder对象
-                .params(params)
-                .url("news/qihoo")
-                .success(new ISuccess() {
-                    @Override
-                    public void onSuccess(String responce) {
-                        Log.i(TAG, "onSuccess: ");
-                        Toast.makeText(CoreActivity.this, responce.toString(), Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .build()  //创建了 RestClient对象
-                .get();  //get请求
     }
 
 
