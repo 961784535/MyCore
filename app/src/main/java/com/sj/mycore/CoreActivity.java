@@ -3,11 +3,12 @@ package com.sj.mycore;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.sj.mycore.net.RestClient;
+import com.sj.mycore.net.RxPrinciple.RestClient;
 import com.sj.mycore.net.callback.IError;
 import com.sj.mycore.net.callback.IFailure;
 import com.sj.mycore.net.callback.ISuccess;
@@ -25,6 +26,7 @@ public class CoreActivity extends AppCompatActivity {
 
     private HashMap<String, Object> params;
     private android.widget.TextView tv;
+    private String TAG ="CoreActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +38,7 @@ public class CoreActivity extends AppCompatActivity {
               testGet();
 //        testUpload();
 //        testDownload();
-//        testRxGet();
+//      testRxGet();
     }
 
     /**
@@ -101,6 +103,33 @@ public class CoreActivity extends AppCompatActivity {
                 })
                 .build()
                 .download();
+//        RxRestClient.create().params(params)
+//                .url("/examples/test.zip")
+//                .build()
+//                .download()
+//                .subscribeOn(Schedulers.io())//io线程处理
+//                .observeOn(AndroidSchedulers.mainThread())//主线程
+//                .subscribe(new Observer<Object>() {
+//                    @Override
+//                    public void onSubscribe(Disposable d) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onNext(Object o) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable e) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onComplete() {
+//                        Toast.makeText(CoreActivity.this, "下载成功", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
     }
 
     //上传
@@ -143,6 +172,7 @@ public class CoreActivity extends AppCompatActivity {
                 .success(new ISuccess() {
                     @Override
                     public void onSuccess(String responce) {
+                        Log.i(TAG, "onSuccess: ");
                         Toast.makeText(CoreActivity.this, responce.toString(), Toast.LENGTH_SHORT).show();
                     }
                 })

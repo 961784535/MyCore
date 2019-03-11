@@ -1,4 +1,4 @@
-package com.sj.mycore.net;
+package com.sj.mycore.net.RxPrinciple;
 
 import com.sj.mycore.app.ConfigKeys;
 import com.sj.mycore.app.ProjectInit;

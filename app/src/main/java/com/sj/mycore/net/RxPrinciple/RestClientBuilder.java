@@ -1,4 +1,4 @@
-package com.sj.mycore.net;
+package com.sj.mycore.net.RxPrinciple;
 
 import com.sj.mycore.net.callback.IError;
 import com.sj.mycore.net.callback.IFailure;

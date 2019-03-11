@@ -2,7 +2,7 @@ package com.sj.mycore.net.download;
 
 import android.os.AsyncTask;
 
-import com.sj.mycore.net.RestCreator;
+import com.sj.mycore.net.RxPrinciple.RestCreator;
 import com.sj.mycore.net.callback.IError;
 import com.sj.mycore.net.callback.IFailure;
 import com.sj.mycore.net.callback.IRequest;
