@@ -59,7 +59,8 @@ public class CoreActivity extends AppCompatActivity {
                 testRxGet();
                 break;
             case R.id.btnPost : //
-
+//                testPost();
+                testRxPost();
                 break;
             case R.id.btnDownload : //
                 testDownload();
@@ -73,16 +74,22 @@ public class CoreActivity extends AppCompatActivity {
         }
     }
 
-    //get请求 (已测试OK)
+
+    /**
+     *  封装get   (已测试OK)
+     *  API集市-》 360新闻
+     *  http://api01.idataapi.cn:8000/news/qihoo?kw=111&site=qq.com&apikey=IhNUGOTbEhh9qn41mEbwNxF5vUBpHg9a6XPuJeOGPn7Uqy9o8ecEGgezo4g5BSLi
+     */
     private void testGet() {
+        String getUrl="news/qihoo";
         params = new HashMap();
-        params.put("kw","%E7%99%BD");
+        params.put("kw","123");
         params.put("site","qq.com");
         params.put("apikey","IhNUGOTbEhh9qn41mEbwNxF5vUBpHg9a6XPuJeOGPn7Uqy9o8ecEGgezo4g5BSLi");
-        tvUrl.setText(""+ ProjectInit.getConfiguration(ConfigKeys.API_HOST).toString());
+        tvUrl.setText(ProjectInit.getConfiguration(ConfigKeys.API_HOST).toString() + getUrl);
         RestClient.create() //创建了 RestClientBuilder对象
                 .params(params)
-                .url("news/qihoo")
+                .url(getUrl)
                 .success(new ISuccess() {
                     @Override
                     public void onSuccess(String responce) {
@@ -96,16 +103,19 @@ public class CoreActivity extends AppCompatActivity {
     }
 
     /**
-     * 封装 rx  (已测试OK)
+     *  封装get rx  (已测试OK)
+     *  API集市-》 360新闻
+     *  http://api01.idataapi.cn:8000/news/qihoo?kw=111&site=qq.com&apikey=IhNUGOTbEhh9qn41mEbwNxF5vUBpHg9a6XPuJeOGPn7Uqy9o8ecEGgezo4g5BSLi
      */
     private void testRxGet() {
+        String getRxUrl="/news/qihoo";
         params = new HashMap();
-        params.put("kw","%E7%99%BD");
+        params.put("kw","123");
         params.put("site","qq.com");
         params.put("apikey","IhNUGOTbEhh9qn41mEbwNxF5vUBpHg9a6XPuJeOGPn7Uqy9o8ecEGgezo4g5BSLi");
-        tvUrl.setText(""+ ProjectInit.getConfiguration(ConfigKeys.API_HOST).toString());
+        tvUrl.setText(ProjectInit.getConfiguration(ConfigKeys.API_HOST).toString() + getRxUrl);
         RxRestClient.create()
-                .url("news/qihoo")
+                .url(getRxUrl)
                 .params(params)
                 .build()
                 .get()
@@ -121,6 +131,89 @@ public class CoreActivity extends AppCompatActivity {
                     public void onNext(@NonNull String s) {
                         //响应结果
                         Toast.makeText(CoreActivity.this, "RxGet成功", Toast.LENGTH_SHORT).show();
+                        tvResponse.setText("" + s);
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        tvResponse.setText("" + e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
+
+    /**
+     *  post (已测试OK)
+     *  API集市-》 中文分词
+     *  http://api01.idataapi.cn:8000/nlp/segment/bitspaceman?apikey=IhNUGOTbEhh9qn41mEbwNxF5vUBpHg9a6XPuJeOGPn7Uqy9o8ecEGgezo4g5BSLi
+     */
+    private void testPost() {
+        // API集市-》 中文分词
+        //http://api01.idataapi.cn:8000/nlp/segment/bitspaceman?apikey=IhNUGOTbEhh9qn41mEbwNxF5vUBpHg9a6XPuJeOGPn7Uqy9o8ecEGgezo4g5BSLi
+        String postUrl="/nlp/segment/bitspaceman?apikey=IhNUGOTbEhh9qn41mEbwNxF5vUBpHg9a6XPuJeOGPn7Uqy9o8ecEGgezo4g5BSLi";
+        tvUrl.setText(ProjectInit.getConfiguration(ConfigKeys.API_HOST).toString()+ postUrl);
+        params = new HashMap();
+        params.put("text","测试接口");
+        RestClient.create() //创建了 RestClientBuilder对象
+                .params(params)
+                .url(postUrl)
+                .success(new ISuccess() {
+                    @Override
+                    public void onSuccess(String responce) {
+                        Log.i(TAG, "onSuccess: ");
+                        Toast.makeText(CoreActivity.this, "Post成功", Toast.LENGTH_SHORT).show();
+                        tvResponse.setText("" + responce.toString());
+                    }
+                })
+                .build()
+                .post();
+    }
+
+    /**
+     * Rx post (已测试OK)
+     *  API集市-》 中文分词
+     *  http://api01.idataapi.cn:8000/nlp/segment/bitspaceman?apikey=IhNUGOTbEhh9qn41mEbwNxF5vUBpHg9a6XPuJeOGPn7Uqy9o8ecEGgezo4g5BSLi
+     */
+    private void testRxPost() {
+         String postRxUrl="/nlp/segment/bitspaceman?apikey=IhNUGOTbEhh9qn41mEbwNxF5vUBpHg9a6XPuJeOGPn7Uqy9o8ecEGgezo4g5BSLi";
+        tvUrl.setText(ProjectInit.getConfiguration(ConfigKeys.API_HOST).toString()+ postRxUrl);
+        params = new HashMap();
+        params.put("text","测试接口");
+        RestClient.create() //创建了 RestClientBuilder对象
+                .params(params)
+                .url(postRxUrl)
+                .success(new ISuccess() {
+                    @Override
+                    public void onSuccess(String responce) {
+                        Log.i(TAG, "onSuccess: ");
+                        Toast.makeText(CoreActivity.this, "Post成功", Toast.LENGTH_SHORT).show();
+                        tvResponse.setText("" + responce.toString());
+                    }
+                })
+                .build()
+                .post();
+        RxRestClient.create()
+                .url(postRxUrl)
+                .params(params)
+                .build()
+                .post()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<String>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(@NonNull String s) {
+                        //响应结果
+                        Toast.makeText(CoreActivity.this, "RxPost成功", Toast.LENGTH_SHORT).show();
                         tvResponse.setText("" + s);
                     }
 

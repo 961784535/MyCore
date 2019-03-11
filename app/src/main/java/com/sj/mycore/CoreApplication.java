@@ -19,8 +19,9 @@ public class CoreApplication extends Application {
     public void onCreate() {
         super.onCreate();
         ProjectInit.init(this)
-                .withApiHost("http://120.76.205.241:8000/")
+//                .withApiHost("http://120.76.205.241:8000/")  // get请求可用
               //  .withApiHost("http://dengpaoedu.com:8080")
+                .withApiHost("http://api01.idataapi.cn:8000")
                 .withInterreceptors(new ArrayList<Interceptor>())
                 .configure();
     }
